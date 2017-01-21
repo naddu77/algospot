@@ -1,18 +1,38 @@
-// AlgorithmTemplate.cpp : Defines the entry point for the console application.
+// MAXSUM.cpp : 콘솔 응용 프로그램에 대한 진입점을 정의합니다.
 //
 
 #include <iostream>
 #include <string>
+#include <list>
+#include <algorithm>
 
 using namespace std;
 
-class Problem
+class MaxSum
 {
 public:
-	Problem() = delete;
-	~Problem() = default;
+	MaxSum(const list<int>& sequence)
+		: sequence(sequence)
+	{
+
+	}
+	~MaxSum() = default;
+
+	class AlgorithmFunctor
+	{
+	public:
+		int result = 0;
+		int sum_of_partial_sequence = 0;
+		void operator()(int n) { result = max(result, sum_of_partial_sequence = sum_of_partial_sequence > -n ? sum_of_partial_sequence + n : 0); }
+	};
+
+	int DoAlgorithm(void)
+	{
+		return for_each(begin(sequence), end(sequence), AlgorithmFunctor()).result;
+	}
 
 private:
+	list<int> sequence;
 };
 
 class AlgorithmHelper
@@ -85,39 +105,50 @@ private:
 	virtual void Result(void) = 0;
 };
 
-class SolveProblem final : public AlgorithmHelper
+class SolveMaxSum final : public AlgorithmHelper
 {
 private:
+	list<int> sequence;
+
 	void Init(void) override
 	{
 		// 초기화 코드
+		sequence.clear();
 	}
 
 	void Input(void) override
 	{
-		//Read(input1, input2);
+		int N;
+		Read(N);
+		for (auto i = 0; i < N; ++i)
+		{
+			int number;
+			Read(number);
+			sequence.push_back(number);
+		}
 	}
 
 	void Result(void) override
 	{
-		Print(Problem(input1, input2).DoAlgorithm());
+		Print(MaxSum(sequence).DoAlgorithm());
 	}
 };
 
 void TestCases(void)
 {
-	cout << Problem().DoAlgorithm() << endl;
+	cout << MaxSum({ 1, 2, 3, 4 }).DoAlgorithm() << endl;
+	cout << MaxSum({ -1, 0, 1 }).DoAlgorithm() << endl;
 }
 
 void Run(void)
 {
-	SolveProblem solver;
+	SolveMaxSum solver;
 	solver();
 }
 
 int main()
 {
-	TestCases();
-	//Run();
+	//TestCases();
+	Run();
 	return 0;
 }
